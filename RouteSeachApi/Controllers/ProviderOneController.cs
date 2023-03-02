@@ -22,7 +22,13 @@ namespace RouteSeachApi.Controllers {
         [ProducesResponseType(typeof(bool), 200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> Ping(CancellationToken cancellationToken) {
-            return Ok(await _dispatcher.Send(new ProviderOneAvailableRequest(), cancellationToken));
+            var status = await _dispatcher.Send(new ProviderOneAvailableRequest(), cancellationToken);
+            if (status) {
+                return Ok();
+            }
+            else {
+                return StatusCode(500, "Service Unavailable");
+            }
         }
 
         [HttpPost, Route("search")]
